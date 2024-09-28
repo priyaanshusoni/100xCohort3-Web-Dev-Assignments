@@ -16,6 +16,38 @@ setInterval(() => {
     numberOfRequestsForUser = {};
 }, 1000)
 
+function rateLimit(req,res,next){
+  const userid = req.headers['user-id'];
+
+  if(numberOfRequestsForUser[userid]){
+    if(numberOfRequestsForUser[userid]>=5){
+      res.status(404).json({
+        msg : "Too Many Requests!"
+      })
+ }
+
+ if(numberOfRequestsForUser[userid]<5 && numberOfRequestsForUser[userid]>1){
+   numberOfRequestsForUser[userid]+=1;
+   next();
+ }
+
+  }
+ 
+  else{
+    numberOfRequestsForUser[userid] =1;
+    next();
+  }
+ 
+
+
+      
+
+
+}
+
+
+app.use(rateLimit)
+
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
 });

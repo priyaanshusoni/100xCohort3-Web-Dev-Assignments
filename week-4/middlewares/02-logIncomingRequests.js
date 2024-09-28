@@ -4,7 +4,11 @@ const express = require('express');
 const app = express();
 
 function logRequests(req, res, next) {
+     const date = new Date();
+
     // write the logic for request log here
+    console.log(`${req.method} ${req.url} - ${date.toISOString()}` );
+    next();
 }
 
 app.use(logRequests);
